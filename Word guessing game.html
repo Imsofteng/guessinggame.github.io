@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>guess the Word</title>
+    <style>
+      * {
+        padding: 0px;
+        margin: 0px;
+        box-sizing: border-box;
+      }
+      header {
+        height: 15vh;
+        display: flex;
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2rem;
+        color: white;
+        text-shadow: 0px 10px 5px gainsboro;
+        text-transform: uppercase;
+        background-color: rgb(81, 81, 233);
+        box-shadow: 4px 4px 5px grey;
+      }
+      .gamearea {
+        background-color: rgba(81, 81, 233, 0.598);
+        height: 85vh;
+        max-width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .gamecard {
+        height: 60vh;
+        width: 50%;
+        background-color: rgb(81, 81, 233);
+        box-shadow: 4px 4px 5px grey;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        border-radius: 10px;
+      }
+      input {
+        width: 50%;
+        height: 50px;
+        border-radius: 40px;
+        border: none;
+        outline: none;
+        text-align: center;
+        text-align: center;
+        font-size: 1.1rem;
+        margin: 10px 0px;
+        background-color: rgb(227, 224, 224);
+      }
+      .btn {
+        padding: 12px 10px;
+        border-radius: 40px;
+        border: none;
+        margin-top: 10px;
+        background-color: rgb(255, 255, 255);
+        color: rgb(81, 81, 233);
+        font-size: 0.9rem;
+        transition: all 0.2s ease-in;
+
+        font-weight: bold;
+      }
+      .btn:hover {
+        transform: scaleX(1.05);
+        cursor: pointer;
+
+        transition: all 0.2s ease-in;
+      }
+      .hidden {
+        display: none;
+      }
+      @media screen and (max-width: 650px) {
+        header {
+          font-size: 1rem;
+        }
+      }
+      @media screen and (max-width: 485px) {
+        header {
+          font-size: 0.9rem;
+        }
+        .btn {
+          padding: 8px 7px;
+          font-size: 0.7rem;
+          margin-top: 7px;
+        }
+      }
+      .msg {
+        color: white;
+      }
+      @keyframes shake {
+        0% {
+          transform: translateX(0);
+        }
+        10%,
+        30%,
+        50%,
+        70%,
+        90% {
+          transform: translateX(-10px);
+        }
+        20%,
+        40%,
+        60%,
+        80% {
+          transform: translateX(10px);
+        }
+        100% {
+          transform: translateX(0);
+        }
+      }
+
+      .style {
+        color: red;
+      }
+
+      .shake {
+        animation: shake 0.3s;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Guessing World Game</h1>
+    </header>
+    <div class="gamearea">
+      <div class="gamecard">
+        <h2 class="msg"></h2>
+        <input type="text" class="hidden" />
+        <div class="btnbox">
+          <button class="btn">Click here to Start</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const guessInput = document.querySelector("input");
+      const message = document.querySelector(".msg");
+      const button = document.querySelector(".btn");
+      let Swords = [
+        "java",
+        "python",
+        "react",
+        "javascript",
+        "angular",
+        "css",
+        "bootstrap",
+        "html",
+        "tailwind",
+        "kotlin",
+        "rust",
+        "kotlin",
+      ];
+      let play = false;
+      let randomWords = "";
+      let newWords = "";
+      const storewords = () => {
+        let random = Math.floor(Math.random() * Swords.length);
+        let ChangeWords = Swords[random];
+        // console.log(random)
+        // console.log(ChangeWords)
+        return ChangeWords;
+      };
+
+      const scramblefunc = (arr) => {
+        for (let i = arr.length - 1; i >= 0; i--) {
+          let temp = arr[i];
+          let j = Math.floor(Math.random() * i);
+          arr[i] = arr[j];
+          arr[j] = temp;
+          console.log(i);
+          //  [i,temp]=[j]
+        }
+        return arr;
+      };
+      button.addEventListener("click", function () {
+        if (!play) {
+          play = true;
+          button.innerHTML = "Guess";
+          guessInput.classList.toggle("hidden");
+          randomWords = storewords();
+          newWords = scramblefunc(randomWords.split("")).join("");
+          message.innerHTML = `Guess the Word '${newWords}'`;
+          console.log(randomWords);
+          console.log(newWords);
+        } else {
+          let tempWord = guessInput.value;
+          if (tempWord === randomWords) {
+            play = false;
+            message.innerHTML = `Awesome Its correct. it is ${randomWords}`;
+            button.innerHTML = "Start Again";
+            guessInput.classList.toggle("hidden");
+            guessInput.value = "";
+
+            // console.log('correct');
+          } else {
+            if (guessInput.value === "") {
+              message.innerHTML = `Guess First '${newWords}'!`;
+              message.classList.add("style");
+              // add shake animation class
+            } else {
+              message.innerHTML = `Incorrect try again ${newWords}`;
+              guessInput.value = "";
+              message.classList.remove("style");
+            }
+
+            // console.log('incorrect')
+          }
+        }
+      });
+      
+    </script>
+  </body>
+</html>
